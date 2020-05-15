@@ -7,7 +7,7 @@
 
   <body>
     <h1>ESP8266 Files</h1>
-    <table border="1">
+    <table border="1" id="tabla">
       <thead>
         <tr>
           <th>Archivos</th>
@@ -20,20 +20,34 @@
   </body>
   <script type="text/javascript">
     (() => {
+      const ic = (nr,c,i) => { nr.insertCell(c).innerHTML = i; }
+      const adr = (tr, dirs, nivel) => {
+        dirs.forEach((e)=>{
+          const nr = tr.insertRow();
+          if (e[1] == 0) {
+            ic(nr,0,e[0]);
+            ic(nr,1,e[2]);
+            ic(nr,2,'📥');
+            ic(nr,3,'🗑️');
+            ic(nr,4,'♻️');
+          } else {
+            nc = nr.insertCell(0);
+            nc.innerHTML = e[0];
+            nc.colSpan = 2;
+            ic(nr,1,'');
+            ic(nr,2,'🗑️');
+            ic(nr,3,'➕');
+            adr(tr, e[2], nivel+1);
+          }
+        })
+
+      };
       fetch("files_", { method: "GET" })
         .then((r) => r.json())
         .catch((e) => console.error(e))
         .then((r) => {
-          const tr = document
-            .getElementById("myTable")
-            .getElementsByTagName("tbody")[0];
-          r.forEach((e) => {
-            const nr = tr.insertRow();
-            let nc = nr.insertCell(0);
-            nc.innerHTML = e[0];
-            nc = nr.insertCell(1);
-            nc.innerHTML = e[1] == 0 ? "⬛" : "🟨";
-          });
+          const tr = document.getElementById("tabla").getElementsByTagName("tbody")[0];
+          adr(tr, r, 0);
         });
     })();
   </script>
