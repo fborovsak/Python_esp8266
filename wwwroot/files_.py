@@ -2,7 +2,7 @@ import uos
 def serve(method):
     if (method == "GET"):
         import ujson
-        return ujson.dumps(getDirContent())
+        return ujson.dumps([["/", getDirs()]])
 
 def getDirContent(d=""):
     dir = "/" if d == "" else d
@@ -15,3 +15,7 @@ def getDirFiles(d):
             yield (f[0], 0, f[3])
         else:
             yield from getDirContent(d + "/" + f[0])
+
+def getDirs(d=""):
+    dir = "/" if d == "" else d
+    return [(f[0], f[3] if f[1] == 0x8000 else getDirs(d+"/"+f[0])) for f in uos.ilistdir(dir)]

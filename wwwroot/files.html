@@ -1,57 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>ESP8266 Files</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
-  </head>
 
-  <body>
-    <h1>ESP8266 Files</h1>
-    <table border="1" id="tabla">
-      <thead>
-        <tr>
-          <th>Archivos</th>
-          <th>Peso</th>
-          <th colspan="3">Acciones</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </body>
-  <script type="text/javascript">
-    (() => {
-      const ic = (nr,c,i) => { nr.insertCell(c).innerHTML = i; }
-      const adr = (tr, dirs, nivel) => {
-        dirs.forEach((e)=>{
-          const nr = tr.insertRow();
-          if (e[1] == 0) {
-            ic(nr,0,e[0]);
-            ic(nr,1,e[2]);
-            ic(nr,2,'📥');
-            ic(nr,3,'🗑️');
-            ic(nr,4,'♻️');
-          } else {
-            nc = nr.insertCell(0);
-            nc.innerHTML = e[0];
-            nc.colSpan = 2;
-            ic(nr,1,'');
-            ic(nr,2,'🗑️');
-            ic(nr,3,'➕');
-            adr(tr, e[2], nivel+1);
-          }
-        })
+<head>
+  <title>ESP8266 Files</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+</head>
 
-      };
-      fetch("files_", { method: "GET" })
-        .then((r) => r.json())
-        .catch((e) => console.error(e))
-        .then((r) => {
-          const tr = document.getElementById("tabla").getElementsByTagName("tbody")[0];
-          adr(tr, r, 0);
-        });
-    })();
-  </script>
+<body>
+  <h1>ESP8266 Files</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Archivos</th>
+        <th>Peso</th>
+        <th colspan="3">Acciones</th>
+      </tr>
+    </thead>
+    <tbody t7 def="tr" get="files_"></tbody>
+  </table>
+  <template id="tr">
+    {{#js_if "Array.isArray(this[1])"}}{{> "trd"}}
+    {{else}}{{> "trf"}}
+    {{/js_if}}
+  </template>
+  <template id="trf" partial>
+    {{#each this}}
+    {{#js_if "Number.isInteger(this[1])"}}
+    <tr><td>{{this[0]}}</td><td>{{this[1]}}</td><td>📥</td><td>🗑️</td><td>♻️</td></tr>
+    {{else}}{{> "trd"}}{{/js_if}}
+    {{/each}}
+  </template>
+  <template id="trd" partial>
+    {{#js_if "Array.isArray(this[1])"}}
+    <tr><td colspan="2">{{this[0]}}</td><td></td><td>🗑️</td><td>➕</td></tr>
+    {{#with this[1]}}{{> "trf"}}{{/with}}
+  </template>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/template7/1.4.1/template7.min.js"></script>
+<script src="./utils_mock.js"></script>
 </html>

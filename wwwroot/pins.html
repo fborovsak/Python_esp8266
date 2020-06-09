@@ -16,20 +16,19 @@
   </header>
   <section>
     <div class="container">
-      <table id="myTable">
+      <table>
         <thead>
           <tr>
             <th>Pin</th>
             <th>Value</th>
           </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody t7 def="tr" get="pins_"></tbody>
+      </table>
     </div>
-    </table>
   </section>
   <template id="tr">
-    {{#each items}}
+    {{#each this}}
     <tr>
       <td>{{this[0]}}</td>
       <td>{{js "this[1] ? '⬛' : '🟨'"}}</td>
@@ -39,13 +38,4 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/template7/1.4.1/template7.min.js"></script>
 <script src="./utils_mock.js"></script>
-<script type="text/javascript">
-  const tr = t("tr");
-  (async () => {
-    const r = { items: await f.get("pins_") };
-    const tbody = document.getElementById('myTable').getElementsByTagName('tbody')[0];
-    tbody.innerHTML = tr(r);
-  })();
-</script>
-
 </html>
