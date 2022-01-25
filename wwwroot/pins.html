@@ -23,19 +23,16 @@
             <th>Value</th>
           </tr>
         </thead>
-        <tbody t7 def="tr" get="pins_"></tbody>
+        <tbody>
+          <tr $for="$get" $get="pins_">
+            <td>${this[0]}</td>
+            <td>${"this[1] ? '⬛' : '🟨'"}</td>
+            <td></td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </section>
-  <template id="tr">
-    {{#each this}}
-    <tr>
-      <td>{{this[0]}}</td>
-      <td>{{js "this[1] ? '⬛' : '🟨'"}}</td>
-    </tr>
-    {{/each}}
-  </template>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/template7/1.4.1/template7.min.js"></script>
-<script src="./utils_mock.js"></script>
+<script src="./10plate.js"></script>
 </html>
